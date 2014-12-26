@@ -43,7 +43,7 @@ nnoremap <silent> <F3> :Grep<CR>
 
 
 " …Ë÷√bundle
-execute pathogen#infect()
+" execute pathogen#infect()
 syntax on
 filetype plugin indent on
 
@@ -52,19 +52,24 @@ set nocompatible              " be iMproved
 filetype off                  " required!
 
 set rtp+=$home/vimfiles/bundle/Vundle.vim/
-call vundle#rc($home . "/vimfiles/bundle")
+" call vundle#begin()
+   " alternatively, pass a path where Vundle should install plugins
+   "call vundle#begin('~/some/path/here')
+
+call vundle#begin($home . "/vimfiles/bundle")
 
 " let Vundle manage Vundle
 " required!
-Bundle 'gmarik/vundle'
+Plugin 'gmarik/Vundle.vim'
 
 " My bundles here:
 "
 " original repos on GitHub
-Bundle 'c.vim'
-Bundle 'taglist.vim'
+Plugin 'c.vim'
+Plugin 'taglist.vim'
 "
 
+call vundle#end()            " required
 filetype plugin indent on     " required!
 
 " # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
