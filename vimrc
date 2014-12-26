@@ -90,3 +90,43 @@ colo desert
 syn on
 " 默认使用clipboard寄存器*
 set clipboard=unnamed
+
+" set for ctrlp
+" 设置弹出窗口样式,下方弹出，重上到下排序，
+let g:ctrlp_match_window = 'bottom,order:ttb,min:1,max:15,results:15'
+" 回车 或者 ^t 选择
+let g:ctrlp_switch_buffer = 'Et'
+" 在已有netrw,help,quickfix窗口时，不重复创建窗口
+let g:ctrlp_reuse_window = 'netrw\|help\|quickfix'
+" 在当前tab页后面创建新tab页
+let g:ctrlp_tabpage_position = 'ac'
+" 以当前目录和.svn目录为根目录
+let b:ctrlp_working_path_mode = 'ra'
+" 缓存
+let g:ctrlp_use_caching = 1
+" 当退出vim时，删除缓存
+let g:ctrlp_clear_cache_on_exit = 1
+" 缓存目录
+let g:ctrlp_cache_dir = $home . '/.cache/ctrlp'
+" ctrlp扫描隐藏文件
+let g:ctrlp_show_hidden = 1
+" 设置搜索忽略
+let ctrlp_custom_ignore={
+    \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+    \ 'file': '\v\.(exe|so|dll)$',
+    \ }
+" 最多扫描文件数
+let g:ctrlp_max_files = 200
+" 最多扫描文件深度
+let g:ctrlp_max_depth = 6
+" 根据svn扫描文件
+let g:ctrlp_user_command = {
+    \ 'types': {
+      \ 1: ['.git', 'cd %s && git ls-files'],
+      \ 2: ['.svn', 'cd %s && svn ls'],
+      \ }
+    \ }
+" ctrlp输入记录数
+let g:ctrlp_max_history = &history
+" 当输入<c-y>时，vertical开新文件
+let g:ctrlp_open_new_file = 'v'
