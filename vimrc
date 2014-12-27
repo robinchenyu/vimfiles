@@ -83,6 +83,8 @@ set softtabstop=4
 " 以空格代替tab
 set expandtab
 
+set autochdir
+
 " 设置主题
 colo desert
 
