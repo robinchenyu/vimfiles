@@ -124,12 +124,12 @@ let g:ctrlp_max_files = 200
 " 最多扫描文件深度
 let g:ctrlp_max_depth = 6
 " 根据svn扫描文件
-let g:ctrlp_user_command = {
-    \ 'types': {
-      \ 1: ['.git', 'cd %s && git ls-files'],
-      \ 2: ['.svn', 'cd %s && svn ls'],
-      \ }
-    \ }
+" let g:ctrlp_user_command = {
+"     \ 'types': {
+"       \ 1: ['.git', 'cd %s && git ls-files'],
+"       \ 2: ['.svn', 'cd %s && svn ls'],
+"       \ }
+"     \ }
 " ctrlp输入记录数
 let g:ctrlp_max_history = &history
 " 当输入<c-y>时，vertical开新文件
