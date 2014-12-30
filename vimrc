@@ -38,8 +38,10 @@ inoremap jk <ESC>
 map gn :bn<cr>
 map gp :bp<cr>
 map gd :bd<cr>
-map gf :Grep<CR>
-nnoremap <silent> <F3> :Grep<CR>
+nnoremap <silent> <F3> :exe "vimgrep " . @" . " *.cpp *.c"<CR>
+nnoremap <silent> <F2> :cn<CR>
+nnoremap <silent> <C-F2> :cp<CR>
+
 
 
 " 设置bundle
@@ -128,3 +130,7 @@ let g:ctrlp_user_command = {
     \ }
 " ctrlp输入记录数
 let g:ctrlp_max_history = &history
+
+" 忽略大小写查询
+set ic
+
