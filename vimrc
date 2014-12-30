@@ -83,9 +83,6 @@ set softtabstop=4
 " 以空格代替tab
 set expandtab
 
-" 自动切换目录
-set autochdir
-
 " 设置主题
 colo desert
 
@@ -131,5 +128,3 @@ let g:ctrlp_user_command = {
     \ }
 " ctrlp输入记录数
 let g:ctrlp_max_history = &history
-" 当输入<c-y>时，vertical开新文件
-let g:ctrlp_open_new_file = 'v'
