@@ -69,6 +69,7 @@ Plugin 'gmarik/Vundle.vim'
 " original repos on GitHub
 Plugin 'c.vim'
 Plugin 'taglist.vim'
+Plugin 'vim-neatstatus'
 "
 
 call vundle#end()            " required
