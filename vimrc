@@ -86,6 +86,12 @@ set softtabstop=4
 " 以空格代替tab
 set expandtab
 
+" 不要菜单栏和工具栏
+set go=egrL
+
+" 自动切换目录
+set autochdir
+
 " 设置主题
 colo desert
 
