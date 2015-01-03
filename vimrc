@@ -111,7 +111,7 @@ let g:ctrlp_reuse_window = 'netrw\|help\|quickfix'
 " 在当前tab页后面创建新tab页
 let g:ctrlp_tabpage_position = 'ac'
 " 以当前目录和.svn目录为根目录
-let b:ctrlp_working_path_mode = 'ra'
+let b:ctrlp_working_path_mode = 'c'
 " 缓存
 let g:ctrlp_use_caching = 1
 " 当退出vim时，删除缓存
@@ -130,15 +130,16 @@ let g:ctrlp_max_files = 200
 " 最多扫描文件深度
 let g:ctrlp_max_depth = 6
 " 根据svn扫描文件
-let g:ctrlp_user_command = {
-    \ 'types': {
-      \ 1: ['.git', 'cd %s && git ls-files'],
-      \ 2: ['.svn', 'cd %s && svn ls'],
-      \ }
-    \ }
+" let g:ctrlp_user_command = {
+"     \ 'types': {
+"       \ 1: ['.git', 'cd %s && git ls-files'],
+"       \ 2: ['.svn', 'cd %s && svn ls'],
+"       \ }
+"     \ }
 " ctrlp输入记录数
 let g:ctrlp_max_history = &history
 
+let g:ctrlp_extensions = ['tag', 'buffertag']
 " 忽略大小写查询
 set ic
 
@@ -146,18 +147,28 @@ set ic
 map <F12> :call Do_CsTag()<CR>
 nmap <C-@>s :cs find s <C-R>=expand("<cword>")<CR><CR>:copen<CR>
 nmap <C-@>g :cs find g <C-R>=expand("<cword>")<CR><CR>
-nmap <C-@>c :cs find c <C-R>=expand("<cword>")<CR><CR>:copen<CR>
-nmap <C-@>t :cs find t <C-R>=expand("<cword>")<CR><CR>:copen<CR>
-nmap <C-@>e :cs find e <C-R>=expand("<cword>")<CR><CR>:copen<CR>
-nmap <C-@>f :cs find f <C-R>=expand("<cfile>")<CR><CR>:copen<CR>
+nmap <C-@>c :cs find c <C-R>=expand("<cword>")<CR>
+nmap <C-@>t :cs find t <C-R>=expand("<cword>")<CR>
+nmap <C-@>e :cs find e <C-R>=expand("<cword>")<CR>
+nmap <C-@>f :cs find f <C-R>=expand("<cfile>")<CR>
 nmap <C-@>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>:copen<CR>
-nmap <C-@>d :cs find d <C-R>=expand("<cword>")<CR><CR>:copen<CR>
+nmap <C-@>d :cs find d <C-R>=expand("<cword>")<CR>
 function! Do_CsTag()
     let dir = getcwd()
     let proj_dir = strpart(dir, 0, 2) . finddir("uep", ".;")
     let tags_path = strpart(dir, 0, 2) . findfile("tags", ".;")
-    let cscope_path = findfile("cscope.out", ".;")
-    let cscope_files_path = findfile("cscope.files", ".;")
+    let cscope_path = strpart(dir, 0, 2) . findfile("cscope.out", ".;")
+    let cscope_files_path = strpart(dir, 0, 2) . findfile("cscope.files", ".;")
+    if len(cscope_path) == 0
+        if g:iswindows
+            let cscope_path = proj_dir . "\cscope.out"
+            let cscope_files_path = proj_dir . "\cscope.files"
+        else
+            let cscope_path = proj_dir . "/cscope.out"
+            let cscope_files_path = proj_dir . "/cscope.files"
+        endif
+    endif
+
     echo "dir ". dir .";proj_dir: ". proj_dir ." ;tags_path: ". tags_path ." cscope_path: ". cscope_path ." cscope_files_path: ". cscope_files_path
 
     if filereadable(tags_path)
@@ -198,7 +209,7 @@ function! Do_CsTag()
         else
             silent! execute "!dir ". proj_dir ." /s/b *.c,*.cpp,*.h,*.java,*.cs >> ". proj_dir ."\\cscope.files"
         endif
-        silent! execute "!cscope -b ". proj_dir
+        silent! execute "lcd ". proj_dir ."|!cscope -b -R "
         execute "normal :"
         if filereadable(cscope_path)
             execute "cs add ". cscope_path
