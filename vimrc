@@ -110,8 +110,8 @@ let g:ctrlp_switch_buffer = 'Et'
 let g:ctrlp_reuse_window = 'netrw\|help\|quickfix'
 " 在当前tab页后面创建新tab页
 let g:ctrlp_tabpage_position = 'ac'
-" 以当前目录和.svn目录为根目录
-let b:ctrlp_working_path_mode = 'c'
+" 以当前目录
+let g:ctrlp_working_path_mode = 'c'
 " 缓存
 let g:ctrlp_use_caching = 1
 " 当退出vim时，删除缓存
@@ -159,6 +159,24 @@ function! Do_CsTag()
     let tags_path = strpart(dir, 0, 2) . findfile("tags", ".;")
     let cscope_path = strpart(dir, 0, 2) . findfile("cscope.out", ".;")
     let cscope_files_path = strpart(dir, 0, 2) . findfile("cscope.files", ".;")
+
+    let s:all_projects = ["uep", "sipphone", "vim74"]
+    
+    for prj in s:all_projects
+        if finddir(prj, ".;")
+            let s:project = prj
+        endif
+    endfor
+
+    if len(proj_dir) <= len(strpart(dir, 0, 2))
+        let proj_dir = dir
+    endif
+    if len(tags_path) == 0
+        let tags_path = proj_dir . "/tags"
+        if g:iswindows
+            let tags_path = proj_dir . "\tags"
+        endif
+    endif
     if len(cscope_path) == 0
         if g:iswindows
             let cscope_path = proj_dir . "\cscope.out"
@@ -169,7 +187,7 @@ function! Do_CsTag()
         endif
     endif
 
-    echo "dir ". dir .";proj_dir: ". proj_dir ." ;tags_path: ". tags_path ." cscope_path: ". cscope_path ." cscope_files_path: ". cscope_files_path
+    echom "project " . s:project . "dir ". dir .";proj_dir: ". proj_dir ." ;tags_path: ". tags_path ." cscope_path: ". cscope_path ." cscope_files_path: ". cscope_files_path
 
     if filereadable(tags_path)
         if(g:iswindows==1)
