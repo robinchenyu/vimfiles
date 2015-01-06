@@ -10,8 +10,8 @@ else
 endif
 
 if has('autocmd')
-  " Remove ALL autocommands for the current group
-  au!
+    " Remove ALL autocommands for the current group
+    au!
 endif
 autocmd BufEnter * lcd %:p:h
 " -----------------------------------------------------------------------------
@@ -24,13 +24,13 @@ else
 endif
 
 if v:version < 700
-  echoerr 'This _vimrc requires Vim 7 or later.'
-  quit
+    echoerr 'This _vimrc requires Vim 7 or later.'
+    quit
 endif
 
 if has('multi_byte')
-  " Legacy encoding is the system default encoding
-  let legacy_encoding=&encoding
+    " Legacy encoding is the system default encoding
+    let legacy_encoding=&encoding
 endif
 
 " 快捷键设置
@@ -56,8 +56,8 @@ filetype off                  " required!
 
 set rtp+=$home/vimfiles/bundle/Vundle.vim/
 " call vundle#begin()
-   " alternatively, pass a path where Vundle should install plugins
-   "call vundle#begin('~/some/path/here')
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
 
 call vundle#begin($home . "/vimfiles/bundle")
 
@@ -123,9 +123,9 @@ let g:ctrlp_cache_dir = $home . '/.cache/ctrlp'
 let g:ctrlp_show_hidden = 1
 " 设置搜索忽略
 let ctrlp_custom_ignore={
-    \ 'dir':  '\v[\/]\.(git|hg|svn)$',
-    \ 'file': '\v\.(exe|so|dll)$',
-    \ }
+            \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+            \ 'file': '\v\.(exe|so|dll)$',
+            \ }
 " 最多扫描文件数
 let g:ctrlp_max_files = 200
 " 最多扫描文件深度
@@ -145,7 +145,10 @@ let g:ctrlp_extensions = ['tag', 'buffertag']
 set ic
 
 " 配置ctags和cscope 
-map <F12> :call Do_CsTag()<CR>
+map <C-F12> :call Do_CsTag()<CR>
+map <F12> :call SwitchProject()<CR>
+map <M-p> :CtrlPMRUFiles<CR>
+map <M-b> :CtrlPBookmarkDir<CR>
 nmap <C-@>s :cs find s <C-R>=expand("<cword>")<CR><CR>:copen<CR>
 nmap <C-@>g :cs find g <C-R>=expand("<cword>")<CR><CR>
 nmap <C-@>c :cs find c <C-R>=expand("<cword>")<CR>
@@ -154,48 +157,55 @@ nmap <C-@>e :cs find e <C-R>=expand("<cword>")<CR>
 nmap <C-@>f :cs find f <C-R>=expand("<cfile>")<CR>
 nmap <C-@>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>:copen<CR>
 nmap <C-@>d :cs find d <C-R>=expand("<cword>")<CR>
-function! Do_CsTag()
-    let dir = getcwd()
-    let proj_dir = strpart(dir, 0, 2) . finddir("uep", ".;")
-    let tags_path = strpart(dir, 0, 2) . findfile("tags", ".;")
-    let cscope_path = strpart(dir, 0, 2) . findfile("cscope.out", ".;")
-    let cscope_files_path = strpart(dir, 0, 2) . findfile("cscope.files", ".;")
 
-    let s:all_projects = ["uep", "sipphone", "vim74"]
-    
-    for prj in s:all_projects
-        if finddir(prj, ".;")
-            let s:project = prj
+function! FindProjDir()
+    let cur_dir = getcwd()
+    let myprojects = {"uep07": ".\\+7.\\+uep", "sipdll": ".\\+sipdll.Source", "uep06": ".\\+6.\\+uep"}
+
+    for [key,val] in items(myprojects)
+        if cur_dir =~ val
+            return [key, matchstr(cur_dir, val)]
         endif
     endfor
+    echo "no project"
+    return ["unknown", cur_dir]
+endfunction
 
-    if len(proj_dir) <= len(strpart(dir, 0, 2))
-        let proj_dir = dir
-    endif
-    if len(tags_path) == 0
-        let tags_path = proj_dir . "/tags"
-        if g:iswindows
-            let tags_path = proj_dir . "\tags"
-        endif
-    endif
-    if len(cscope_path) == 0
-        if g:iswindows
-            let cscope_path = proj_dir . "\cscope.out"
-            let cscope_files_path = proj_dir . "\cscope.files"
-        else
-            let cscope_path = proj_dir . "/cscope.out"
-            let cscope_files_path = proj_dir . "/cscope.files"
-        endif
+function! SwitchProject()
+    let [project_name, project_dir] = FindProjDir()
+
+    set tags&
+    execute "cs kill -1"
+    if g:iswindows
+        let &tags = &tags . "," . project_dir . "\\tags" 
+        execute "cs add " . project_dir . "\\cscope.out"
+        echo "set tags " . &tags . "cs ". project_dir . "\\cscope.out"
+        
+    else
+        let &tags = &tags . "," . project_dir . "/tags" 
+        execute "cs add " . project_dir . "/cscope.out"
     endif
 
-    echom "project " . s:project . "dir ". dir .";proj_dir: ". proj_dir ." ;tags_path: ". tags_path ." cscope_path: ". cscope_path ." cscope_files_path: ". cscope_files_path
+
+endfunction
+
+function! Do_CsTag()
+    let [project_name, project_dir] = FindProjDir()
+
+    if g:iswindows
+        let tags_path = project_dir . "\\tags"
+        let cscope_path = project_dir . "\\cscope.out"
+        let cscope_files_path = project_dir . "\\cscope.files"
+    else
+        let tags_path = project_dir . "/tags"
+        let cscope_path = project_dir . "/cscope.out"
+        let cscope_files_path = project_dir . "/cscope.files"
+    endif
+
+    echom "project " . project_name . "dir ". project_dir ." ;tags_path: ". tags_path ." cscope_path: ". cscope_path ." cscope_files_path: ". cscope_files_path
 
     if filereadable(tags_path)
-        if(g:iswindows==1)
-            let tagsdeleted=delete(tags_path)
-        else
-            let tagsdeleted=delete(tags_path)
-        endif
+        let tagsdeleted=delete(tags_path)
         if(tagsdeleted!=0)
             echohl WarningMsg | echo "Fail to do tags! I cannot delete the tags" | echohl None
             return
@@ -220,15 +230,19 @@ function! Do_CsTag()
     endif
     if(executable('ctags'))
         "silent! execute "!ctags -R --c-types=+p --fields=+S *"
-        silent! execute "lcd ". proj_dir ."|!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q " . proj_dir ." -f " . tags_path
+        silent! execute "lcd ". project_dir ."|!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q " . project_dir ." -f " . tags_path
+       if &tags !~ project_dir 
+          let &tags=&tags . ",". tags_path
+          echo "set tags = ". &tags
+      endif 
     endif
     if(executable('cscope') && has("cscope") )
         if(g:iswindows!=1)
-            silent! execute "!find ". proj_dir ." -name '*.h' -o -name '*.c' -o -name '*.cpp' -o -name '*.java' -o -name '*.cs' > ". proj_dir ."/cscope.files"
+            silent! execute "!find ". project_dir ." -name '*.h' -o -name '*.c' -o -name '*.cpp' -o -name '*.java' -o -name '*.cs' > ". project_dir ."/cscope.files"
         else
-            silent! execute "!dir ". proj_dir ." /s/b *.c,*.cpp,*.h,*.java,*.cs >> ". proj_dir ."\\cscope.files"
+            silent! execute "!dir ". project_dir ." /s/b *.c,*.cpp,*.h,*.java,*.cs >> ". project_dir ."\\cscope.files"
         endif
-        silent! execute "lcd ". proj_dir ."|!cscope -b -R "
+        silent! execute "lcd ". project_dir ."|!cscope -b -R "
         execute "normal :"
         if filereadable(cscope_path)
             execute "cs add ". cscope_path
