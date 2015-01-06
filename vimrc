@@ -149,6 +149,8 @@ map <C-F12> :call Do_CsTag()<CR>
 map <F12> :call SwitchProject()<CR>
 map <M-p> :CtrlPMRUFiles<CR>
 map <M-b> :CtrlPBookmarkDir<CR>
+map <C-v>d :call SvnDirStatus()<CR>
+map <C-v>= :call SvnDiffWindows()<CR>
 nmap <C-@>s :cs find s <C-R>=expand("<cword>")<CR><CR>:copen<CR>
 nmap <C-@>g :cs find g <C-R>=expand("<cword>")<CR><CR>
 nmap <C-@>c :cs find c <C-R>=expand("<cword>")<CR>
