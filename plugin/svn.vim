@@ -26,6 +26,7 @@ function! SvnDirStatus()
     call setline(1, getcwd())
     call setline(2, "-----------------------")
     exec ":$;r !svn status ."
+    map <buffer> = :call SvnDiffWindows()<CR>
 endfunction
 
 function! SvnDiffWindows()
