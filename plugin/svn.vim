@@ -22,11 +22,35 @@
 
 function! SvnDirStatus()
     exec ":new svn.status"
+    silent! setlocal previewwindow bufhidden=delete nobackup noswf nobuflisted nowrap buftype=nofile 
     exec ":1,$d" 
     call setline(1, getcwd())
     call setline(2, "-----------------------")
     exec ":$;r !svn status ."
+    setlocal nomodifiable
     map <buffer> = :call SvnDiffWindows()<CR>
+    map <buffer> <Space> :call SvnActive()<CR>
+endfunction
+
+function! SvnActive()
+    let line = getline('.')
+    if line =~ '^M'
+        let newline = substitute(line, '\v^M(.*)$', '[ ] \1', '')
+    else 
+        if line =~ '^\[ \]'
+            let newline = substitute(line, '\v^\[ \](.*)$', '[X]\1', '')
+        else
+            if line =~ '^\[X\]'
+                let newline = substitute(line, '\v^\[X\](.*)$', '[ ]\1', '')
+            else
+                let newline = line
+            endif
+        endif
+    endif
+    setlocal modifiable
+    call setline('.', newline)
+    setlocal nomodifiable
+
 endfunction
 
 function! SvnDiffWindows()
