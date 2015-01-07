@@ -25,26 +25,39 @@ function! SvnDirStatus()
     silent! setlocal previewwindow bufhidden=delete nobackup noswf nobuflisted nowrap buftype=nofile 
     exec ":1,$d" 
     call setline(1, getcwd())
-    call setline(2, "-----------------------")
+    call setline(2, repeat('-', 80))
+    call setline(3, "=: diff, <Space>: select, <C-c>: commit, <C-u>: revert")
+    call setline(4, repeat('-', 80))
+
     exec ":$;r !svn status ."
     setlocal nomodifiable
     map <buffer> = :call SvnDiffWindows()<CR>
     map <buffer> <Space> :call SvnActive()<CR>
+    map <buffer> <C-c> :call SvnCommit()<CR>
+    map <buffer> <C-u> :call SvnRevert()<CR>
+endfunction
+
+function! SvnRevert()
+    list_of_files = SvnGetListFiles('^*M ')
+    exec ":!svn revert " . list_of_files
+    call SvnDirStatus()
+endfunction
+
+function! SvnCommit()
+    list_of_files = SvnGetListFiles('^*M ')
+    exec ":!svn commit " . list_of_files
+    call SvnDirStatus()
 endfunction
 
 function! SvnActive()
     let line = getline('.')
     if line =~ '^M'
-        let newline = substitute(line, '\v^M(.*)$', '[ ] \1', '')
+        let newline = substitute(line, '\v^M (.*)$', '*M\1', '')
     else 
-        if line =~ '^\[ \]'
-            let newline = substitute(line, '\v^\[ \](.*)$', '[X]\1', '')
+        if line =~ '^*M'
+            let newline = substitute(line, '\v*M$', 'M \1', '')
         else
-            if line =~ '^\[X\]'
-                let newline = substitute(line, '\v^\[X\](.*)$', '[ ]\1', '')
-            else
-                let newline = line
-            endif
+            let newline = line
         endif
     endif
     setlocal modifiable
@@ -53,20 +66,27 @@ function! SvnActive()
 
 endfunction
 
-function! SvnDiffWindows()
+function! SvnGetListFiles(ptn)
     let i = 0
     let list_of_files = ''
 
     while i <= line('$')
         let line = getline(i)
-        if line =~ '^M'
-
-            let file = substitute(line, '\v^MM?\s*(.*)\s*$', '\1', '')
+        " echo "line: " . line . " pattern: " . a:ptn . " called: " . matchstr(line, a:ptn) 
+        if line =~ a:ptn
+            let file = substitute(line, '\v' . a:ptn . '\s*(.*)\s*$', '\1', '')
             let list_of_files = list_of_files . ' '.file
+            " echo "get file: " . file
         endif
 
         let i = i + 1
     endwhile
+    return list_of_files
+endfunction
+
+
+function! SvnDiffWindows()
+    list_of_files = SvnGetListFiles("^M ")
 
     if list_of_files == ""
         return 
