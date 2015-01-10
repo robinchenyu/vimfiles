@@ -39,7 +39,7 @@ inoremap jk <ESC>
 map gn :bn<cr>
 map gp :bp<cr>
 map gd :bd<cr>
-nnoremap <silent> <F3> :exe "vimgrep " . expand("<cword>") . " *.cpp *.c *.py"<CR>
+nnoremap <silent> <F3> :exe "vimgrep " . expand("<cword>") . " *.cpp *.c *.py *.log"<CR>
 nnoremap <silent> <C-F3> :exe "vimgrep " . @" . " *.cpp *.c"<CR>
 nnoremap <silent> <F2> :cn<CR>
 nnoremap <silent> <C-F2> :cp<CR>
