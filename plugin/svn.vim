@@ -1,6 +1,6 @@
 " made by Michael Scherer ( misc@mandrake.org )
 " $Id: svn.vim 282 2005-01-31 21:24:55Z misc $
-"
+" 
 " 2004-09-13 : Lukas Ruf ( lukas.ruf@lpr.ch )
 "   - re-ordered windows
 "   - set focus on svn-commit.tmp (that's where one has to write)
@@ -38,14 +38,27 @@ function! SvnDirStatus()
 endfunction
 
 function! SvnRevert()
-    list_of_files = SvnGetListFiles('^*M ')
-    exec ":!svn revert " . list_of_files
+    let list_of_files = SvnGetListFiles('^*M ')
+
+    if list_of_files == ""
+        echo "Please select a file"
+        return 
+    endif
+    exec ":!svn revert " . list_of_files . "\n"
+    echo ":!svn revert " . list_of_files
     call SvnDirStatus()
 endfunction
 
 function! SvnCommit()
-    list_of_files = SvnGetListFiles('^*M ')
-    exec ":!svn commit " . list_of_files
+    let list_of_files = SvnGetListFiles('^*M ')
+
+    if list_of_files == ""
+        echo "Please select a file"
+        return 
+    endif
+
+    exec ":!svn commit " . list_of_files . "\n"
+    echo ":!svn commit " . list_of_files
     call SvnDirStatus()
 endfunction
 
@@ -55,8 +68,10 @@ function! SvnActive()
         let newline = substitute(line, '\v^M (.*)$', '*M\1', '')
     else 
         if line =~ '^*M'
-            let newline = substitute(line, '\v*M$', 'M \1', '')
+            echo "1"
+            let newline = substitute(line, '\v*M(.*)$', 'M \1', '')
         else
+            echo "2"
             let newline = line
         endif
     endif
@@ -86,7 +101,7 @@ endfunction
 
 
 function! SvnDiffWindows()
-    list_of_files = SvnGetListFiles("^M ")
+    let list_of_files = SvnGetListFiles("^*M ")
 
     if list_of_files == ""
         return 
@@ -94,7 +109,8 @@ function! SvnDiffWindows()
     
     new
     silent! setlocal ft=diff previewwindow bufhidden=delete nobackup noswf nobuflisted nowrap buftype=nofile
-    exe 'normal :r!svn diff ' . list_of_files . "\n"
+    call setline(1, 'normal :r!svn diff ' . list_of_files . "\n")
+    exe 'normal :$;r!svn diff ' . list_of_files . "\n"
     setlocal nomodifiable
     goto 1
     redraw!
