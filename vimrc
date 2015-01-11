@@ -150,6 +150,7 @@ map <C-F12> :call Do_CsTag()<CR>
 map <F12> :call SwitchProject()<CR>
 map <M-p> :CtrlPMRUFiles<CR>
 map <M-b> :CtrlPBookmarkDir<CR>
+map <M-t> :CtrlPBufTag<CR>
 map <C-v>d :call SvnDirStatus()<CR>
 map <C-v>= :call SvnDiffWindows()<CR>
 nmap <C-@>s :cs find s <C-R>=expand("<cword>")<CR><CR>:copen<CR>
@@ -163,7 +164,7 @@ nmap <C-@>d :cs find d <C-R>=expand("<cword>")<CR>
 
 function! FindProjDir()
     let cur_dir = getcwd()
-    let myprojects = {"uep07": ".\\+7.\\+uep", "sipdll": ".\\+sipdll.Source", "uep06": ".\\+6.\\+uep"}
+    let myprojects = {"uep07": ".\\+7.\\+uep", "sipdll": ".\\+sipdll.Source", "uep06": ".\\+6.\\+uep", "xercesc": ".\\+src.xercesc"}
 
     for [key,val] in items(myprojects)
         if cur_dir =~ val
