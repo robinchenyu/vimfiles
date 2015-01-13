@@ -57,8 +57,14 @@ function! SvnCommit()
         return 
     endif
 
-    exec ":!svn commit " . list_of_files . "\n"
-    echo ":!svn commit " . list_of_files
+    let desc = inputdialog("Commit Summary:")
+    if desc == ""
+        echo "Please input a messge for commit"
+        return
+    endif
+
+    exec ":!svn commit -m " . desc . " " . list_of_files . "\n"
+    echo ":!svn commit -m " .desc . " " . list_of_files
     call SvnDirStatus()
 endfunction
 
