@@ -19,22 +19,27 @@
 "   - do not preview if no file are diffed, patch from Marius Gedminas.
 "  
 " to use it, place it in ~/.vim/ftplugins ( create the directory if it doesn't exist ) 
-
+let s:fileline = 1
 function! SvnDirStatus()
-    exec ":new svn.status"
+    exec ":tabnew! svn.status"
     silent! setlocal previewwindow bufhidden=delete nobackup noswf nobuflisted nowrap buftype=nofile 
+
+    set modifiable
     exec ":1,$d" 
     call setline(1, getcwd())
     call setline(2, repeat('-', 80))
-    call setline(3, "=: diff, <Space>: select, <C-c>: commit, <C-u>: revert")
-    call setline(4, repeat('-', 80))
+    call setline(3, "=: diff, <Space>: select, <leader>v: commit, <leader>u: revert")
+    call setline(4, "<leader>h: hide unversion")
+    call setline(5, repeat('-', 80))
+    let s:fileline = 7
 
     exec ":$;r !svn status ."
     setlocal nomodifiable
     map <buffer> = :call SvnDiffWindows()<CR>
     map <buffer> <Space> :call SvnActive()<CR>
-    map <buffer> <C-c> :call SvnCommit()<CR>
-    map <buffer> <C-u> :call SvnRevert()<CR>
+    map <buffer> <leader>v :call SvnCommit()<CR>
+    map <buffer> <leader>u :call SvnRevert()<CR>
+    map <buffer> <leader>h :call SvnHideUnVersion()<CR>
 endfunction
 
 function! SvnRevert()
@@ -46,7 +51,47 @@ function! SvnRevert()
     endif
     exec ":!svn revert " . list_of_files . "\n"
     echo ":!svn revert " . list_of_files
-    call SvnDirStatus()
+
+    let i = s:fileline
+    
+    set modifiable
+    while i <= line('$')
+        let line = getline(i)
+        " echo "line: " . line . " pattern: " . a:ptn . " called: " . matchstr(line, a:ptn) 
+        if line !~ "^* "
+            let newline = substitute(line, '\v^*M (.*)$', '= \1', '')
+            call setline(i, newline)
+        endif
+
+        let i = i + 1
+    endwhile
+
+    setlocal nomodifiable
+endfunction
+
+function! SvnHideUnVersion()
+    let i = s:fileline " for read
+    let j = s:fileline " for write
+
+    setlocal modifiable
+
+    while i <= line('$')
+        let line = getline(i)
+        " echo "line: " . line . " pattern: " . a:ptn . " called: " . matchstr(line, a:ptn) 
+        if line !~ "^[?D ] "
+            call setline(j, line)
+            let j = j + 1
+        endif
+
+        let i = i + 1
+    endwhile
+
+    while j < i
+        call setline(j, "")
+        let j += 1
+    endwhile
+
+    setlocal nomodifiable
 endfunction
 
 function! SvnCommit()
@@ -113,7 +158,8 @@ function! SvnDiffWindows()
         return 
     endif
     
-    new
+    only!
+    vnew
     silent! setlocal ft=diff previewwindow bufhidden=delete nobackup noswf nobuflisted nowrap buftype=nofile
     call setline(1, 'normal :r!svn diff ' . list_of_files . "\n")
     exe 'normal :$;r!svn diff ' . list_of_files . "\n"
@@ -122,7 +168,8 @@ function! SvnDiffWindows()
     redraw!
     wincmd R
     wincmd p
-    goto 1
     redraw!
 endfunction
 
+map <leader>vv :!svn ci -m "" %<left><left><left>
+map <leader>vs :call SvnDirStatus()<cr>

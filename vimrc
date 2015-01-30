@@ -66,8 +66,10 @@ map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
 
+
+
 " Close the current buffer
-map <leader>bd :Bclose<cr>
+map <leader>bd :bd!<cr>
 
 " Close all the buffers
 map <leader>ba :1,1000 bd!<cr>
@@ -277,8 +279,6 @@ map <F12> :call SwitchProject()<CR>
 map <M-p> :CtrlPMRUFiles<CR>
 map <M-b> :CtrlPBookmarkDir<CR>
 map <M-t> :CtrlPBufTag<CR>
-map <C-v>d :call SvnDirStatus()<CR>
-map <C-v>= :call SvnDiffWindows()<CR>
 nmap <C-@>s :cs find s <C-R>=expand("<cword>")<CR><CR>:copen<CR>
 nmap <C-@>g :cs find g <C-R>=expand("<cword>")<CR><CR>
 nmap <C-@>c :cs find c <C-R>=expand("<cword>")<CR>
@@ -434,7 +434,8 @@ function! <SID>BufcloseCloseIt()
      new
    endif
 
+   echom "try to kill buf: " . l:currentBufNum
    if buflisted(l:currentBufNum)
-     execute("bdelete! ".l:currentBufNum)
+     execute("bd! ".l:currentBufNum)
    endif
 endfunction
