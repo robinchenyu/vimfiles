@@ -76,8 +76,8 @@ map <leader>ba :1,1000 bd!<cr>
 
 " Useful mappings for managing tabs
 map <leader>tn :tabnew<cr>
-map <leader>to :tabonly<cr>
-map <leader>tc :tabclose<cr>
+map <leader>to :tabonly!<cr>
+map <leader>tc :tabclose!<cr>
 map <leader>tm :tabmove
 
 " …Ë÷√bundle
