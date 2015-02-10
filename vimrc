@@ -270,6 +270,8 @@ let g:ctrlp_max_depth = 6
 let g:ctrlp_max_history = &history
 
 let g:ctrlp_extensions = ['tag', 'buffertag']
+
+
 " ∫ˆ¬‘¥Û–°–¥≤È—Ø
 set ic
 
@@ -300,6 +302,9 @@ function! FindProjDir()
     echo "no project"
     return ["unknown", cur_dir]
 endfunction
+
+" ≈‰÷√ctrlp√¸¡Ó
+com! -n=? -com=dir CtrlP         cal ctrlp#init(0, { 'dir': FindProjDir()[1]})
 
 function! SwitchProject()
     let [project_name, project_dir] = FindProjDir()
@@ -439,3 +444,14 @@ function! <SID>BufcloseCloseIt()
      execute("bd! ".l:currentBufNum)
    endif
 endfunction
+
+fun! ShowFuncName()                                                             
+    let lnum = line(".")
+    let col = col(".")
+    let func_def=getline(search("^[^ \t#/]\\{2}.*[^:]\s*$", 'bW'))              
+    let no_args=substitute( func_def, "\s*(.*$", "", "g")                       
+    let no_ret_val=substitute( no_args, ".* [^a-zA-Z]*", "", "g")                   
+    call search("\\%" . lnum . "l" . "\\%" . col . "c")
+    return no_ret_val
+endfun
+map <leader>f :echo ShowFuncName()<CR>
