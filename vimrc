@@ -38,7 +38,7 @@ endif
 inoremap jk <ESC>
 map gn :bn<cr>
 map gp :bp<cr>
-nnoremap <silent> <F3> :exe "vimgrep " . expand("<cword>") . " *.cpp *.c *.py *.log *.html"<CR>
+nnoremap <silent> <F3> :exe "vimgrep " . expand("<cword>") . " *.cpp *.c *.h *.py *.log *.html"<CR>
 nnoremap <silent> <C-F3> :exe "vimgrep " . @" . " *.cpp *.c"<CR>
 nnoremap <silent> <F2> :cn<CR>
 nnoremap <silent> <C-F2> :cp<CR>
@@ -255,8 +255,8 @@ let ctrlp_custom_ignore={
             \ 'dir':  '\v[\/]\.(git|hg|svn)$',
             \ 'file': '\v\.(exe|so|dll)$',
             \ }
-" 最多扫描文件数
-let g:ctrlp_max_files = 200
+" 最多扫描文件数; 这个参数是和g:ctrlp_max_depth配合使用的，同时限制文件扫描
+let g:ctrlp_max_files = 2000
 " 最多扫描文件深度
 let g:ctrlp_max_depth = 6
 " 根据svn扫描文件
@@ -446,6 +446,10 @@ function! <SID>BufcloseCloseIt()
 endfunction
 
 fun! ShowFuncName()                                                             
+    if &ft != "c" && &ft != "cpp"
+        return ""
+    endif
+
     let lnum = line(".")
     let col = col(".")
     let func_def=getline(search("^[^ \t#/]\\{2}.*[^:]\s*$", 'bW'))              
