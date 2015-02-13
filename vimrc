@@ -36,8 +36,8 @@ endif
 
 " øÏΩ›º¸…Ë÷√
 inoremap jk <ESC>
-map gn :bn<cr>
-map gp :bp<cr>
+map gn :tn<cr>
+map gp :tp<cr>
 nnoremap <silent> <F3> :exe "vimgrep " . expand("<cword>") . " *.cpp *.c *.h *.py *.log *.html"<CR>
 nnoremap <silent> <C-F3> :exe "vimgrep " . @" . " *.cpp *.c"<CR>
 nnoremap <silent> <F2> :cn<CR>
@@ -304,7 +304,8 @@ function! FindProjDir()
 endfunction
 
 " ≈‰÷√ctrlp√¸¡Ó
-com! -n=? -com=dir CtrlP         cal ctrlp#init(0, { 'dir': FindProjDir()[1]})
+com! -n=? -com=dir CtrlPProj         cal ctrlp#init(0, { 'dir': FindProjDir()[1]})
+map <leader>b :CtrlPProj<CR>
 
 function! SwitchProject()
     let [project_name, project_dir] = FindProjDir()
