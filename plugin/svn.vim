@@ -102,13 +102,13 @@ function! SvnCommit()
         return 
     endif
 
-    let desc = inputdialog("Commit Summary:")
+    let desc = input("Commit Summary:")
     if desc == ""
         echo "Please input a messge for commit"
         return
     endif
 
-    exec ":!svn commit -m " . desc . " " . list_of_files . "\n"
+    exec ":!svn commit -m \"" . desc . "\" " . list_of_files . "\n"
     echo ":!svn commit -m " .desc . " " . list_of_files
     call SvnDirStatus()
 endfunction
@@ -171,5 +171,23 @@ function! SvnDiffWindows()
     redraw!
 endfunction
 
+function! SvnDiffFile()
+    let cur_file = expand('%')
+    if cur_file == ""
+        return 
+    endif
+    silent! only!
+    vnew
+    silent! setlocal ft=diff previewwindow bufhidden=delete nobackup noswf nobuflisted nowrap buftype=nofile
+    call setline(1, 'normal :r!svn diff -x -u -x -w ' . cur_file . "\n")
+    exe 'normal :$;r!svn diff -x -w ' . cur_file . "\n"
+    setlocal nomodifiable
+    goto 1
+    redraw!
+    wincmd R
+    wincmd p
+    redraw!
+endfunction
 map <leader>vv :!svn ci -m "" %<left><left><left>
 map <leader>vs :call SvnDirStatus()<cr>
+map <leader>v= :call SvnDiffFile()<cr>
