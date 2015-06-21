@@ -249,7 +249,7 @@ let g:ctrlp_use_caching = 1
 " 当退出vim时，删除缓存
 let g:ctrlp_clear_cache_on_exit = 1
 " 缓存目录
-let g:ctrlp_cache_dir = $home . '/.cache/ctrlp'
+let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
 " ctrlp扫描隐藏文件
 let g:ctrlp_show_hidden = 1
 " 设置搜索忽略
