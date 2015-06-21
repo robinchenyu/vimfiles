@@ -1,5 +1,6 @@
+" vim: fileencoding=utf-8
 " -----------------------------------------------------------------------------
-"  < ÅĞ¶Ï²Ù×÷ÏµÍ³ÊÇ·ñÊÇ Windows »¹ÊÇ Linux >
+"  < åˆ¤æ–­æ“ä½œç³»ç»Ÿæ˜¯å¦æ˜¯ Windows è¿˜æ˜¯ Linux >
 " -----------------------------------------------------------------------------
 let g:iswindows = 0
 let g:islinux = 0
@@ -16,7 +17,7 @@ endif
 autocmd BufEnter * lcd %:p:h
 autocmd BufWritePost *vimrc source vimrc 
 " -----------------------------------------------------------------------------
-"  < ÅĞ¶ÏÊÇÖÕ¶Ë»¹ÊÇ Gvim >
+"  < åˆ¤æ–­æ˜¯ç»ˆç«¯è¿˜æ˜¯ Gvim >
 " -----------------------------------------------------------------------------
 if has("gui_running")
     let g:isGUI = 1
@@ -34,7 +35,7 @@ if has('multi_byte')
     let legacy_encoding=&encoding
 endif
 
-" ¿ì½İ¼üÉèÖÃ
+" å¿«æ·é”®è®¾ç½®
 inoremap jk <ESC>
 map gn :tn<cr>
 map gp :tp<cr>
@@ -80,7 +81,7 @@ map <leader>to :tabonly!<cr>
 map <leader>tc :tabclose!<cr>
 map <leader>tm :tabmove
 
-" ÉèÖÃbundle
+" è®¾ç½®bundle
 " execute pathogen#infect()
 syntax on
 filetype plugin indent on
@@ -183,12 +184,12 @@ map <leader>p :cp<cr>
 set nocompatible              " be iMproved
 filetype off                  " required!
 
-set rtp+=$home/vimfiles/bundle/Vundle.vim/
+set rtp+=$HOME/.vim/bundle/Vundle.vim/
 " call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
 
-call vundle#begin($home . "/vimfiles/bundle")
+call vundle#begin($HOME . "/.vim/bundle")
 
 " let Vundle manage Vundle
 " required!
@@ -198,9 +199,10 @@ Plugin 'gmarik/Vundle.vim'
 "
 " original repos on GitHub
 Plugin 'c.vim'
-Plugin 'taglist.vim'
+" Plugin 'taglist.vim'
 " Plugin 'vim-neatstatus'
 Plugin 'ctrlp.vim'
+Plugin 'Lokaltog/vim-easymotion'
 "
 
 call vundle#end()            " required
@@ -209,73 +211,73 @@ filetype plugin indent on     " required!
 " # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
 set modeline
 
-: " ÉèÖÃ±à³Ì¼ä¸ô
-" tab³¤¶È
+: " è®¾ç½®ç¼–ç¨‹é—´éš”
+" tabé•¿åº¦
 set tabstop=4
 set shiftwidth=4
 set softtabstop=4
-" ÒÔ¿Õ¸ñ´úÌætab
+" ä»¥ç©ºæ ¼ä»£æ›¿tab
 set expandtab
 
-" ²»Òª²Ëµ¥À¸ºÍ¹¤¾ßÀ¸
+" ä¸è¦èœå•æ å’Œå·¥å…·æ 
 set go=egrL
 
-" ×Ô¶¯ÇĞ»»Ä¿Â¼
-" set autochdir Ê¹ÓÃautocmdÊµÏÖ
+" è‡ªåŠ¨åˆ‡æ¢ç›®å½•
+" set autochdir ä½¿ç”¨autocmdå®ç°
 
-" ÉèÖÃÖ÷Ìâ
+" è®¾ç½®ä¸»é¢˜
 colo desert
 
-" ¿ªÆôÓï·¨¸ßÁÁ
+" å¼€å¯è¯­æ³•é«˜äº®
 syn on
-" Ä¬ÈÏÊ¹ÓÃclipboard¼Ä´æÆ÷*
+" é»˜è®¤ä½¿ç”¨clipboardå¯„å­˜å™¨*
 set clipboard=unnamed
 
 " set for ctrlp
-" ÉèÖÃµ¯³ö´°¿ÚÑùÊ½,ÏÂ·½µ¯³ö£¬ÖØÉÏµ½ÏÂÅÅĞò£¬
+" è®¾ç½®å¼¹å‡ºçª—å£æ ·å¼,ä¸‹æ–¹å¼¹å‡ºï¼Œé‡ä¸Šåˆ°ä¸‹æ’åºï¼Œ
 let g:ctrlp_match_window = 'bottom,order:ttb,min:1,max:15,results:15'
-" »Ø³µ »òÕß ^t Ñ¡Ôñ
+" å›è½¦ æˆ–è€… ^t é€‰æ‹©
 let g:ctrlp_switch_buffer = 'Et'
-" ÔÚÒÑÓĞnetrw,help,quickfix´°¿ÚÊ±£¬²»ÖØ¸´´´½¨´°¿Ú
+" åœ¨å·²æœ‰netrw,help,quickfixçª—å£æ—¶ï¼Œä¸é‡å¤åˆ›å»ºçª—å£
 let g:ctrlp_reuse_window = 'netrw\|help\|quickfix'
-" ÔÚµ±Ç°tabÒ³ºóÃæ´´½¨ĞÂtabÒ³
+" åœ¨å½“å‰tabé¡µåé¢åˆ›å»ºæ–°tabé¡µ
 let g:ctrlp_tabpage_position = 'ac'
-" ÒÔµ±Ç°Ä¿Â¼
+" ä»¥å½“å‰ç›®å½•
 let g:ctrlp_working_path_mode = 'c'
-" »º´æ
+" ç¼“å­˜
 let g:ctrlp_use_caching = 1
-" µ±ÍË³övimÊ±£¬É¾³ı»º´æ
+" å½“é€€å‡ºvimæ—¶ï¼Œåˆ é™¤ç¼“å­˜
 let g:ctrlp_clear_cache_on_exit = 1
-" »º´æÄ¿Â¼
+" ç¼“å­˜ç›®å½•
 let g:ctrlp_cache_dir = $home . '/.cache/ctrlp'
-" ctrlpÉ¨ÃèÒş²ØÎÄ¼ş
+" ctrlpæ‰«æéšè—æ–‡ä»¶
 let g:ctrlp_show_hidden = 1
-" ÉèÖÃËÑË÷ºöÂÔ
+" è®¾ç½®æœç´¢å¿½ç•¥
 let ctrlp_custom_ignore={
             \ 'dir':  '\v[\/]\.(git|hg|svn)$',
             \ 'file': '\v\.(exe|so|dll)$',
             \ }
-" ×î¶àÉ¨ÃèÎÄ¼şÊı; Õâ¸ö²ÎÊıÊÇºÍg:ctrlp_max_depthÅäºÏÊ¹ÓÃµÄ£¬Í¬Ê±ÏŞÖÆÎÄ¼şÉ¨Ãè
+" æœ€å¤šæ‰«ææ–‡ä»¶æ•°; è¿™ä¸ªå‚æ•°æ˜¯å’Œg:ctrlp_max_depthé…åˆä½¿ç”¨çš„ï¼ŒåŒæ—¶é™åˆ¶æ–‡ä»¶æ‰«æ
 let g:ctrlp_max_files = 2000
-" ×î¶àÉ¨ÃèÎÄ¼şÉî¶È
+" æœ€å¤šæ‰«ææ–‡ä»¶æ·±åº¦
 let g:ctrlp_max_depth = 6
-" ¸ù¾İsvnÉ¨ÃèÎÄ¼ş
+" æ ¹æ®svnæ‰«ææ–‡ä»¶
 " let g:ctrlp_user_command = {
 "     \ 'types': {
 "       \ 1: ['.git', 'cd %s && git ls-files'],
 "       \ 2: ['.svn', 'cd %s && svn ls'],
 "       \ }
 "     \ }
-" ctrlpÊäÈë¼ÇÂ¼Êı
+" ctrlpè¾“å…¥è®°å½•æ•°
 let g:ctrlp_max_history = &history
 
 let g:ctrlp_extensions = ['tag', 'buffertag']
 
 
-" ºöÂÔ´óĞ¡Ğ´²éÑ¯
+" å¿½ç•¥å¤§å°å†™æŸ¥è¯¢
 set ic
 
-" ÅäÖÃctagsºÍcscope 
+" é…ç½®ctagså’Œcscope 
 map <C-F12> :call Do_CsTag()<CR>
 map <F12> :call SwitchProject()<CR>
 map <M-p> :CtrlPMRUFiles<CR>
@@ -303,7 +305,7 @@ function! FindProjDir()
     return ["unknown", cur_dir]
 endfunction
 
-" ÅäÖÃctrlpÃüÁî
+" é…ç½®ctrlpå‘½ä»¤
 com! -n=? -com=dir CtrlPProj         cal ctrlp#init(0, { 'dir': FindProjDir()[1]})
 map <leader>b :CtrlPProj<CR>
 
