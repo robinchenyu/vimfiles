@@ -25,6 +25,8 @@ else
     let g:isGUI = 0
 endif
 
+set fileencodings+=gbk
+
 if v:version < 700
     echoerr 'This _vimrc requires Vim 7 or later.'
     quit
@@ -119,7 +121,7 @@ set viminfo^=%
 set laststatus=2
 
 " Format the status line
-set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Pos:\ %l:%c
+set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ Pos:\ %l:%c:%p%%
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -184,12 +186,12 @@ map <leader>p :cp<cr>
 set nocompatible              " be iMproved
 filetype off                  " required!
 
-set rtp+=$HOME/.vim/bundle/Vundle.vim/
+set rtp+=~/.vim/bundle/Vundle.vim/
 " call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
 
-call vundle#begin($HOME . "/.vim/bundle")
+call vundle#begin("~/.vim/bundle")
 
 " let Vundle manage Vundle
 " required!
@@ -199,10 +201,9 @@ Plugin 'gmarik/Vundle.vim'
 "
 " original repos on GitHub
 Plugin 'c.vim'
-" Plugin 'taglist.vim'
+Plugin 'taglist.vim'
 " Plugin 'vim-neatstatus'
 Plugin 'ctrlp.vim'
-Plugin 'Lokaltog/vim-easymotion'
 "
 
 call vundle#end()            " required
@@ -243,13 +244,13 @@ let g:ctrlp_reuse_window = 'netrw\|help\|quickfix'
 " 在当前tab页后面创建新tab页
 let g:ctrlp_tabpage_position = 'ac'
 " 以当前目录
-let g:ctrlp_working_path_mode = 'c'
+let g:ctrlp_working_path_mode = 'ra'
 " 缓存
 let g:ctrlp_use_caching = 1
 " 当退出vim时，删除缓存
 let g:ctrlp_clear_cache_on_exit = 1
 " 缓存目录
-let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
+let g:ctrlp_cache_dir = $home . '/.cache/ctrlp'
 " ctrlp扫描隐藏文件
 let g:ctrlp_show_hidden = 1
 " 设置搜索忽略
@@ -280,9 +281,9 @@ set ic
 " 配置ctags和cscope 
 map <C-F12> :call Do_CsTag()<CR>
 map <F12> :call SwitchProject()<CR>
-map <M-p> :CtrlPMRUFiles<CR>
-map <M-b> :CtrlPBookmarkDir<CR>
-map <M-t> :CtrlPBufTag<CR>
+map <leader>e :CtrlPMRUFiles<CR>
+map <leader>b :CtrlPBookmarkDir<CR>
+map <leader>i :CtrlPBufTag<CR>
 nmap <C-@>s :cs find s <C-R>=expand("<cword>")<CR><CR>:copen<CR>
 nmap <C-@>g :cs find g <C-R>=expand("<cword>")<CR><CR>
 nmap <C-@>c :cs find c <C-R>=expand("<cword>")<CR>
@@ -306,8 +307,8 @@ function! FindProjDir()
 endfunction
 
 " 配置ctrlp命令
-com! -n=? -com=dir CtrlPProj         cal ctrlp#init(0, { 'dir': FindProjDir()[1]})
-map <leader>b :CtrlPProj<CR>
+com! -n=? -com=dir CtrlPProj1         cal ctrlp#init(0, { 'dir': FindProjDir()[1]})
+map <leader>b :CtrlPProj1<CR>
 
 function! SwitchProject()
     let [project_name, project_dir] = FindProjDir()
