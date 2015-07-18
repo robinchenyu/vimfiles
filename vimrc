@@ -78,10 +78,10 @@ map <leader>bd :bd!<cr>
 map <leader>ba :1,1000 bd!<cr>
 
 " Useful mappings for managing tabs
-map <leader>tn :tabnew<cr>
-map <leader>to :tabonly!<cr>
-map <leader>tc :tabclose!<cr>
-map <leader>tm :tabmove
+" map <leader>tn :tabnew<cr>
+" map <leader>to :tabonly!<cr>
+" map <leader>tc :tabclose!<cr>
+" map <leader>tm :tabmove
 
 " 设置bundle
 " execute pathogen#infect()
@@ -202,7 +202,7 @@ Plugin 'gmarik/Vundle.vim'
 " original repos on GitHub
 Plugin 'c.vim'
 Plugin 'taglist.vim'
-" Plugin 'vim-neatstatus'
+Plugin 'vim-neatstatus'
 Plugin 'ctrlp.vim'
 "
 
@@ -259,31 +259,75 @@ let ctrlp_custom_ignore={
             \ 'file': '\v\.(exe|so|dll)$',
             \ }
 " 最多扫描文件数; 这个参数是和g:ctrlp_max_depth配合使用的，同时限制文件扫描
-let g:ctrlp_max_files = 2000
+let g:ctrlp_max_files = 20000
 " 最多扫描文件深度
-let g:ctrlp_max_depth = 6
+let g:ctrlp_max_depth = 40 
 " 根据svn扫描文件
-" let g:ctrlp_user_command = {
-"     \ 'types': {
-"       \ 1: ['.git', 'cd %s && git ls-files'],
-"       \ 2: ['.svn', 'cd %s && svn ls'],
-"       \ }
-"     \ }
+let g:ctrlp_user_command = {
+    \ 'types': {
+      \ 1: ['.git', 'cd %s && git ls-files'],
+      \ 2: ['.svn', 'cd %s && svn ls'],
+      \ }
+    \ }
 " ctrlp输入记录数
 let g:ctrlp_max_history = &history
 
+" 打开文件方 <c-y>
+"  t - in a new tab.
+"  h - in a new horizontal split.
+"  v - in a new vertical split.
+"  r - in the current window.
+let g:ctrlp_open_new_file = 'h'
+
+
 let g:ctrlp_extensions = ['tag', 'buffertag']
 
+let g:ctrlp_prompt_mappings = {
+\ 'PrtBS()':              ['<bs>', '<c-]>'],
+\ 'PrtDelete()':          ['<del>'],
+\ 'PrtDeleteWord()':      ['<c-w>'],
+\ 'PrtClear()':           ['<c-u>'],
+\ 'PrtSelectMove("j")':   ['<c-j>', '<down>'],
+\ 'PrtSelectMove("k")':   ['<c-k>', '<up>'],
+\ 'PrtSelectMove("t")':   ['<Home>', '<kHome>'],
+\ 'PrtSelectMove("b")':   ['<End>', '<kEnd>'],
+\ 'PrtSelectMove("u")':   ['<PageUp>', '<kPageUp>'],
+\ 'PrtSelectMove("d")':   ['<PageDown>', '<kPageDown>'],
+\ 'PrtHistory(-1)':       ['<c-n>'],
+\ 'PrtHistory(1)':        ['<c-p>'],
+\ 'AcceptSelection("e")': ['<cr>', '<2-LeftMouse>'],
+\ 'AcceptSelection("h")': ['<c-x>', '<c-cr>', '<c-s>'],
+\ 'AcceptSelection("t")': ['<c-t>'],
+\ 'AcceptSelection("v")': ['<c-v>', '<RightMouse>'],
+\ 'ToggleFocus()':        ['<s-tab>'],
+\ 'ToggleRegex()':        ['<c-r>'],
+\ 'ToggleByFname()':      ['<c-d>'],
+\ 'ToggleType(1)':        ['<c-f>', '<c-up>'],
+\ 'ToggleType(-1)':       ['<c-b>', '<c-down>'],
+\ 'PrtExpandDir()':       ['<tab>'],
+\ 'PrtInsert("c")':       ['<MiddleMouse>', '<insert>'],
+\ 'PrtInsert()':          ['<c-\>'],
+\ 'PrtCurStart()':        ['<c-a>'],
+\ 'PrtCurEnd()':          ['<c-e>'],
+\ 'PrtCurLeft()':         ['<c-h>', '<left>', '<c-^>'],
+\ 'PrtCurRight()':        ['<c-l>', '<right>'],
+\ 'PrtClearCache()':      ['<F5>'],
+\ 'PrtDeleteEnt()':       ['<F7>'],
+\ 'CreateNewFile()':      ['<c-y>'],
+\ 'MarkToOpen()':         ['<c-z>'],
+\ 'OpenMulti()':          ['<c-o>'],
+\ 'PrtExit()':            ['<esc>', '<c-c>', '<c-g>'],
+\ }
 
 " 忽略大小写查询
 set ic
 
 " 配置ctags和cscope 
-map <C-F12> :call Do_CsTag()<CR>
-map <F12> :call SwitchProject()<CR>
-map <leader>e :CtrlPMRUFiles<CR>
-map <leader>b :CtrlPBookmarkDir<CR>
-map <leader>i :CtrlPBufTag<CR>
+" map <C-F12> :call Do_CsTag()<CR>
+" map <F12> :call SwitchProject()<CR>
+" map <leader>e :CtrlPMRUFiles<CR>
+" map <leader>b :CtrlPBookmarkDir<CR>
+" map <leader>i :CtrlPBufTag<CR>
 nmap <C-@>s :cs find s <C-R>=expand("<cword>")<CR><CR>:copen<CR>
 nmap <C-@>g :cs find g <C-R>=expand("<cword>")<CR><CR>
 nmap <C-@>c :cs find c <C-R>=expand("<cword>")<CR>
@@ -307,8 +351,8 @@ function! FindProjDir()
 endfunction
 
 " 配置ctrlp命令
-com! -n=? -com=dir CtrlPProj1         cal ctrlp#init(0, { 'dir': FindProjDir()[1]})
-map <leader>b :CtrlPProj1<CR>
+" com! -n=? -com=dir CtrlPProj1         cal ctrlp#init(0, { 'dir': FindProjDir()[1]})
+" map <leader>b :CtrlPProj1<CR>
 
 function! SwitchProject()
     let [project_name, project_dir] = FindProjDir()
