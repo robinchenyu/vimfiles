@@ -48,8 +48,8 @@ nnoremap <silent> <C-F2> :cp<CR>
 
 " With a map leader it's possible to do extra key combinations
 " like <leader>w saves the current file
-let mapleader = ","
-let g:mapleader = ","
+let mapleader = "\<Space>"
+let g:mapleader = "\<Space>"
 
 " Fast saving
 nmap <leader>w :w!<cr>
@@ -201,9 +201,10 @@ Plugin 'gmarik/Vundle.vim'
 "
 " original repos on GitHub
 Plugin 'c.vim'
-Plugin 'taglist.vim'
+" Plugin taglist.vim'
 Plugin 'vim-neatstatus'
 Plugin 'ctrlp.vim'
+Plugin 'Valloric/YouCompleteMe'
 "
 
 call vundle#end()            " required
