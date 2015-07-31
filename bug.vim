@@ -1,4 +1,4 @@
-python3 <<EOF
+python <<EOF
 import threading
 import time
 

@@ -1,4 +1,4 @@
-" vim: fileencoding=utf-8
+" encoding: utf-8
 " -----------------------------------------------------------------------------
 "  < 判断操作系统是否是 Windows 还是 Linux >
 " -----------------------------------------------------------------------------
@@ -25,8 +25,6 @@ else
     let g:isGUI = 0
 endif
 
-set fileencodings+=gbk
-
 if v:version < 700
     echoerr 'This _vimrc requires Vim 7 or later.'
     quit
@@ -52,13 +50,15 @@ let mapleader = "\<Space>"
 let g:mapleader = "\<Space>"
 
 " Fast saving
-nmap <leader>w :w!<cr>
-
+nmap <leader>fs :w!<cr>
+nmap <leader>fj :e .
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Set 7 lines to the cursor - when moving vertically using j/k
 set so=7
+set fileencodings+=utf8
+set fileencodings+=gbk
 
 " Disable highlight when <leader><cr> is pressed
 map <silent> <leader><cr> :noh<cr>
@@ -100,7 +100,7 @@ map <leader>cd :cd %:p:h<cr>:pwd<cr>
 
 " Specify the behavior when switching between buffers 
 try
-  set switchbuf=useopen,usetab,newtab
+  set switchbuf=useopen
   set stal=2
 catch
 endtry
@@ -121,8 +121,14 @@ set viminfo^=%
 set laststatus=2
 
 " Format the status line
-set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ Pos:\ %l:%c:%p%%
+set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ fenc:\ %r%{GetFenc()}%h\ \ \ Pos:\ %l:%c,%p%%
 
+func! GetFenc()
+    if len(&fileencoding) == 0
+        return ""
+    endif
+    return &fileencoding
+endfunc
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Editing mappings
@@ -135,6 +141,12 @@ nmap <M-j> mz:m+<cr>`z
 nmap <M-k> mz:m-2<cr>`z
 vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
 vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
+
+
+" some keys about window
+" nmap <leader>wo <C-w><C-o>
+" nmap <leader>wv <C-w><C-v>
+" nmap <leader>ws <C-w><C-s>
 
 if has("mac") || has("macunix")
   nmap <D-j> <M-j>
@@ -201,11 +213,12 @@ Plugin 'gmarik/Vundle.vim'
 "
 " original repos on GitHub
 Plugin 'c.vim'
-" Plugin taglist.vim'
-Plugin 'vim-neatstatus'
+Plugin 'taglist.vim'
+" Plugin 'vim-neatstatus'
 Plugin 'ctrlp.vim'
 Plugin 'Valloric/YouCompleteMe'
 "
+
 
 call vundle#end()            " required
 filetype plugin indent on     " required!
@@ -222,7 +235,7 @@ set softtabstop=4
 set expandtab
 
 " 不要菜单栏和工具栏
-set go=egrL
+set go=egL
 
 " 自动切换目录
 " set autochdir 使用autocmd实现
@@ -237,21 +250,21 @@ set clipboard=unnamed
 
 " set for ctrlp
 " 设置弹出窗口样式,下方弹出，重上到下排序，
-let g:ctrlp_match_window = 'bottom,order:ttb,min:1,max:15,results:15'
+let g:ctrlp_match_window = 'bottom,order:ttb,min:1,max:20,results:20'
 " 回车 或者 ^t 选择
 let g:ctrlp_switch_buffer = 'Et'
 " 在已有netrw,help,quickfix窗口时，不重复创建窗口
 let g:ctrlp_reuse_window = 'netrw\|help\|quickfix'
-" 在当前tab页后面创建新tab页
-let g:ctrlp_tabpage_position = 'ac'
-" 以当前目录
+" 在最后tab页后面创建新tab页
+let g:ctrlp_tabpage_position = 'l'
+" 现已svn,git等查找工程目录, 在以当前目录
 let g:ctrlp_working_path_mode = 'ra'
 " 缓存
 let g:ctrlp_use_caching = 1
 " 当退出vim时，删除缓存
-let g:ctrlp_clear_cache_on_exit = 1
+let g:ctrlp_clear_cache_on_exit = 0
 " 缓存目录
-let g:ctrlp_cache_dir = $home . '/.cache/ctrlp'
+let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
 " ctrlp扫描隐藏文件
 let g:ctrlp_show_hidden = 1
 " 设置搜索忽略
@@ -262,24 +275,20 @@ let ctrlp_custom_ignore={
 " 最多扫描文件数; 这个参数是和g:ctrlp_max_depth配合使用的，同时限制文件扫描
 let g:ctrlp_max_files = 20000
 " 最多扫描文件深度
-let g:ctrlp_max_depth = 40 
+let g:ctrlp_max_depth = 10
 " 根据svn扫描文件
-let g:ctrlp_user_command = {
-    \ 'types': {
-      \ 1: ['.git', 'cd %s && git ls-files'],
-      \ 2: ['.svn', 'cd %s && svn ls'],
-      \ }
-    \ }
+" let g:ctrlp_user_command = {
+"     \ 'types': {
+"       \ 1: ['.git', 'cd %s && git ls-files'],
+"       \ 2: ['.svn', 'cd %s && svn ls'],
+"       \ }
+"     \ }
 " ctrlp输入记录数
 let g:ctrlp_max_history = &history
-
-" 打开文件方 <c-y>
-"  t - in a new tab.
-"  h - in a new horizontal split.
-"  v - in a new vertical split.
-"  r - in the current window.
-let g:ctrlp_open_new_file = 'h'
-
+" 忽略大小写
+if g:iswindows
+    let g:ctrlp_mruf_case_sensitive = 0
+endif
 
 let g:ctrlp_extensions = ['tag', 'buffertag']
 
@@ -324,11 +333,14 @@ let g:ctrlp_prompt_mappings = {
 set ic
 
 " 配置ctags和cscope 
-" map <C-F12> :call Do_CsTag()<CR>
-" map <F12> :call SwitchProject()<CR>
-" map <leader>e :CtrlPMRUFiles<CR>
-" map <leader>b :CtrlPBookmarkDir<CR>
-" map <leader>i :CtrlPBufTag<CR>
+map <C-F12> :call Do_CsTag()<CR>
+map <F12> :call SwitchProject()<CR>
+map <leader><Tab> :e #<CR>
+map <leader>bb :CtrlPMRUFiles<CR>
+map <leader>pp :CtrlPBookmarkDir<CR>
+map <leader>pf :CtrlP<CR>
+map <leader>sl :CtrlPBufTag<CR>
+map <leader>sr :CtrlPBufTagAll<CR>
 nmap <C-@>s :cs find s <C-R>=expand("<cword>")<CR><CR>:copen<CR>
 nmap <C-@>g :cs find g <C-R>=expand("<cword>")<CR><CR>
 nmap <C-@>c :cs find c <C-R>=expand("<cword>")<CR>
@@ -337,6 +349,27 @@ nmap <C-@>e :cs find e <C-R>=expand("<cword>")<CR>
 nmap <C-@>f :cs find f <C-R>=expand("<cfile>")<CR>
 nmap <C-@>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>:copen<CR>
 nmap <C-@>d :cs find d <C-R>=expand("<cword>")<CR>
+
+
+" set the tags path
+
+function! GetCTags()
+    let cph = expand('%:p:h', 1)
+    " if cph =~ '^.\+://' | retu | en
+    for mkr in ['.git/', '.hg/', '.svn/', '.bzr/', '_darcs/', '.vimprojects']
+        let wd = call('find'.(mkr =~ '/$' ? 'dir' : 'file'), [mkr, cph.';'])
+        " echo "finddir(" . mkr . ", " . cph . ";)" . " => " wd 
+        if wd != '' | let &acd = 0 | brea | en
+    endfo
+    if g:iswindows && wd =~ '^\\'
+        let wd = cph[:2] . wd
+    endif
+    " echo wd
+    return substitute(wd, mkr."$", "tags", "")
+endfunction
+
+au BufNewFile,BufRead *.c let &tags=call('GetCTags', [])
+
 
 function! FindProjDir()
     let cur_dir = getcwd()
@@ -508,3 +541,11 @@ fun! ShowFuncName()
     return no_ret_val
 endfun
 map <leader>f :echo ShowFuncName()<CR>
+
+
+" for pydoction
+let g:pydiction_location = 'd:\home\vimfiles\pydiction\complete-dict'
+
+" for emmet
+let g:user_emmet_install_global = 0
+autocmd FileType html,css EmmetInstall
